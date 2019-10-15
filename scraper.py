@@ -1,8 +1,21 @@
 import re
 from urllib.parse import urlparse
 
+#this function receives a URL and corresponding web response
+#(for example, the first one will be "http://www.ics.uci.edu" and the Web response will contain the page itself).
 def scraper(url, resp):
+    if is_valid(url):
+        response = resp
+        if response.status>=600 and response.status<=609:
+            #TODO -> error
+        else if response.status >=200 and response.status <=599:
+            #TODO ->success
+        
+    #if it's a valid page 
+    #parse the web response and extract enough information
+    #you can also save the URL and the web page on your local disk.
     links = extract_next_links(url, resp)
+    #return the list of URLs "scapped" from that page
     return [link for link in links if is_valid(link)]
 
 def extract_next_links(url, resp):
@@ -11,6 +24,8 @@ def extract_next_links(url, resp):
 
 def is_valid(url):
     try:
+        #check if it is within the domains and paths (*.ics.uci.edu/*, *.cs.uci.edu/*, *.informatics.uci.edu/*, *.stat.uci.edu/*, 
+        #today.uci.edu/department/information_computer_sciences/* )
         parsed = urlparse(url)
         if parsed.scheme not in set(["http", "https"]):
             return False
