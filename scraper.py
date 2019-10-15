@@ -4,12 +4,14 @@ from urllib.parse import urlparse
 #this function receives a URL and corresponding web response
 #(for example, the first one will be "http://www.ics.uci.edu" and the Web response will contain the page itself).
 def scraper(url, resp):
+    links = []
     if is_valid(url):
         response = resp
         if response.status>=600 and response.status<=609:
             #TODO -> error
         else if response.status >=200 and response.status <=599:
             #TODO ->success
+            links.append(resp.url)
         
     #if it's a valid page 
     #parse the web response and extract enough information
