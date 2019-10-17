@@ -5,11 +5,12 @@ from urllib.parse import urlparse
 #(for example, the first one will be "http://www.ics.uci.edu" and the Web response will contain the page itself).
 def scraper(url, resp):
     links = []
+    print(is_valid(url))
     if is_valid(url):
         response = resp
-        if response.status>=600 and response.status<=609:
+        #if response.status>=600 and response.status<=609:
             #TODO -> error
-        else if response.status >=200 and response.status <=599:
+        if response.status >=200 and response.status <=599:
             #TODO ->success
             links.append(resp.url)
         
@@ -22,15 +23,22 @@ def scraper(url, resp):
 
 def extract_next_links(url, resp):
     # Implementation requred.
-    return list()
+    validStatusCodes = [200,301,302,307]
+    outputLinks = list()
+    return outputLinks
 
 def is_valid(url):
     try:
         #check if it is within the domains and paths (*.ics.uci.edu/*, *.cs.uci.edu/*, *.informatics.uci.edu/*, *.stat.uci.edu/*, 
         #today.uci.edu/department/information_computer_sciences/* )
         parsed = urlparse(url)
+        print(parsed.netloc)
         if parsed.scheme not in set(["http", "https"]):
             return False
+        else:
+            for domain in set(["ics.uci.edu", "cs.uci.edu", "informatics.uci.edu", "stat.uci.edu"]):
+                if parsed.netloc.find(domain) != -1:
+                    return True
         return not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
             + r"|png|tiff?|mid|mp2|mp3|mp4"
