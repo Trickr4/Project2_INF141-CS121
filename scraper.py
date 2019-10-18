@@ -69,8 +69,9 @@ def is_valid(url):
 class MyHTMLParser(HTMLParser):
     def handle_starttag(self, tag, attrs):
         print("Encountered a start tag:<", tag, "> and " ,attrs,)
-
-
+    #Issue: URL have a path but no domain. This is technically consider inside the domain
+    #Solution: Accept the URL but add the domain and scheme to the path.
+    #  then added it to list of links.
 if __name__ == '__main__':
     htmlscript = []
     req = urllib.request.Request("https://www.ics.uci.edu")
