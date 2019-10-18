@@ -46,8 +46,8 @@ def is_valid(url):
         parsed = urlparse(url)
         valids = ["ics.uci.edu/","cs.uci.edu/","information.ics.edu/","stat.uci.edu/"]
         validStr = "".join(valids)
-        url_netlock =parsed.netlock
-        if not url_netlock.find(v):
+        url_netlock = parsed.netloc
+        if not url_netlock.find(validStr):
             return false
         if parsed.scheme in set(["http", "https"]):
             return false
@@ -59,7 +59,7 @@ def is_valid(url):
             + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
             + r"|epub|dll|cnf|tgz|sha1"
             + r"|thmx|mso|arff|rtf|jar|csv"
-            + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower()
+            + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower())
 
     except TypeError:
         print ("TypeError for ", parsed)
