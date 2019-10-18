@@ -43,8 +43,13 @@ def is_valid(url):
         #check if it is within the domains and paths (*.ics.uci.edu/*, *.cs.uci.edu/*, *.informatics.uci.edu/*, *.stat.uci.edu/*, 
         #today.uci.edu/department/information_computer_sciences/* )
         parsed = urlparse(url)
-        if parsed.scheme not in set(["http", "https"]):
-            return False
+        valids = ["ics.uci.edu/","cs.uci.edu/","information.ics.edu/","stat.uci.edu/"]
+        validStr = string.join(valids)
+        url_netlock =parsed.netlock
+        if not url_netlock.find(v):
+            return false
+        if parsed.scheme in set(["http", "https"]):
+            return false
         return not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
             + r"|png|tiff?|mid|mp2|mp3|mp4"
