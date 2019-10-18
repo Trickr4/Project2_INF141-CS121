@@ -1,5 +1,6 @@
 import re
 from urllib.parse import urlparse
+import urllib
 from urllib.request import urlopen
 from html.parser import HTMLParser
 
@@ -43,8 +44,13 @@ def is_valid(url):
         #check if it is within the domains and paths (*.ics.uci.edu/*, *.cs.uci.edu/*, *.informatics.uci.edu/*, *.stat.uci.edu/*, 
         #today.uci.edu/department/information_computer_sciences/* )
         parsed = urlparse(url)
-        if parsed.scheme not in set(["http", "https"]):
-            return False
+        valids = ["ics.uci.edu/","cs.uci.edu/","information.ics.edu/","stat.uci.edu/"]
+        validStr = "".join(valids)
+        url_netlock =parsed.netlock
+        if not url_netlock.find(v):
+            return false
+        if parsed.scheme in set(["http", "https"]):
+            return false
         return not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
             + r"|png|tiff?|mid|mp2|mp3|mp4"
@@ -53,30 +59,25 @@ def is_valid(url):
             + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
             + r"|epub|dll|cnf|tgz|sha1"
             + r"|thmx|mso|arff|rtf|jar|csv"
-            + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower())
+            + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower()
 
     except TypeError:
         print ("TypeError for ", parsed)
         raise
 
-
-'''
+    '''
 class MyHTMLParser(HTMLParser):
     def handle_starttag(self, tag, attrs):
-        print("Encountered a start tag:", tag)
+        print("Encountered a start tag:<", tag, "> and " ,attrs,)
 
-    def handle_endtag(self, tag):
-        print("Encountered an end tag :", tag)
-
-    def handle_data(self, data):
-        print("Encountered some data  :", data)
 
 if __name__ == '__main__':
     htmlscript = []
-    url = urlopen("https://www.pythonforbeginners.com/code/regular-expression-re-findall")
+    req = urllib.request.Request("https://www.ics.uci.edu")
+    url = urlopen(req)
     for line in url:
-        htmlscript.append(str(line))
+        htmlscript.append(str(line).strip('b\''))
     parser = MyHTMLParser()
     for line in htmlscript:
         parser.feed(line)
-'''
+    '''
