@@ -64,11 +64,14 @@ def is_valid(url):
     except TypeError:
         print ("TypeError for ", parsed)
         raise
-
+    
     '''
 class MyHTMLParser(HTMLParser):
     def handle_starttag(self, tag, attrs):
-        print("Encountered a start tag:<", tag, "> and " ,attrs,)
+        if len(attrs) > 0:
+            for content in attrs:
+                if "href" in content:
+                    print("Encountered a start tag:<", tag, "> and " ,attrs,)
     #Issue: URL have a path but no domain. This is technically consider inside the domain
     #Solution: Accept the URL but add the domain and scheme to the path.
     #  then added it to list of links.
