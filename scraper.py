@@ -44,7 +44,7 @@ def is_valid(url):
         #today.uci.edu/department/information_computer_sciences/* )
         parsed = urlparse(url)
         valids = ["ics.uci.edu/","cs.uci.edu/","information.ics.edu/","stat.uci.edu/"]
-        validStr = string.join(valids)
+        validStr = "".join(valids)
         url_netlock =parsed.netlock
         if not url_netlock.find(v):
             return false
