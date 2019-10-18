@@ -1,11 +1,12 @@
 import re
 from urllib.parse import urlparse
+from urllib.request import urlopen
+from html.parser import HTMLParser
 
 #this function receives a URL and corresponding web response
 #(for example, the first one will be "http://www.ics.uci.edu" and the Web response will contain the page itself).
 def scraper(url, resp):
     links = []
-    print(is_valid(url))
     if is_valid(url):
         response = resp
         #if response.status>=600 and response.status<=609:
@@ -25,6 +26,16 @@ def extract_next_links(url, resp):
     # Implementation requred.
     validStatusCodes = [200,301,302,307]
     outputLinks = list()
+    if is_valid(url) and resp.error == None:
+        outputLinks.append(url)
+    
+    while True:
+        '''
+        Open the URL/HTML text file. Find valid URL links and then
+        puts it in outputLinks
+        '''
+        url = urlopen("https://www.pythonforbeginners.com/code/regular-expression-re-findall")
+        break
     return outputLinks
 
 def is_valid(url):
@@ -32,13 +43,8 @@ def is_valid(url):
         #check if it is within the domains and paths (*.ics.uci.edu/*, *.cs.uci.edu/*, *.informatics.uci.edu/*, *.stat.uci.edu/*, 
         #today.uci.edu/department/information_computer_sciences/* )
         parsed = urlparse(url)
-        print(parsed.netloc)
         if parsed.scheme not in set(["http", "https"]):
             return False
-        else:
-            for domain in set(["ics.uci.edu", "cs.uci.edu", "informatics.uci.edu", "stat.uci.edu"]):
-                if parsed.netloc.find(domain) != -1:
-                    return True
         return not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
             + r"|png|tiff?|mid|mp2|mp3|mp4"
@@ -52,3 +58,25 @@ def is_valid(url):
     except TypeError:
         print ("TypeError for ", parsed)
         raise
+
+
+'''
+class MyHTMLParser(HTMLParser):
+    def handle_starttag(self, tag, attrs):
+        print("Encountered a start tag:", tag)
+
+    def handle_endtag(self, tag):
+        print("Encountered an end tag :", tag)
+
+    def handle_data(self, data):
+        print("Encountered some data  :", data)
+
+if __name__ == '__main__':
+    htmlscript = []
+    url = urlopen("https://www.pythonforbeginners.com/code/regular-expression-re-findall")
+    for line in url:
+        htmlscript.append(str(line))
+    parser = MyHTMLParser()
+    for line in htmlscript:
+        parser.feed(line)
+'''
