@@ -67,11 +67,19 @@ def is_valid(url):
     
     '''
 class MyHTMLParser(HTMLParser):
+
+    def reset(self):
+        HTMLParser.reset(self)
+        self.links = []
+
     def handle_starttag(self, tag, attrs):
-        if len(attrs) > 0:
-            for content in attrs:
-                if "href" in content:
-                    print("Encountered a start tag:<", tag, "> and " ,attrs,)
+        for content in attrs:
+            if "dropdown-item" in content:
+                self.links.append(attrs[1][1].strip("\\'"))
+
+    def get_links(self):
+        return self.links
+        
     #Issue: URL have a path but no domain. This is technically consider inside the domain
     #Solution: Accept the URL but add the domain and scheme to the path.
     #  then added it to list of links.
@@ -84,4 +92,6 @@ if __name__ == '__main__':
     parser = MyHTMLParser()
     for line in htmlscript:
         parser.feed(line)
+    for link in parser.get_links():
+        print(str(req.full_url)+link)
     '''
