@@ -71,18 +71,14 @@ class MyHTMLParser(HTMLParser):
     def reset(self):
         HTMLParser.reset(self)
         self.links = []
-        self.complete = []
-
+        
     def handle_starttag(self, tag, attrs):
         for content in attrs:
-            if "dropdown-item" in content:
-                self.links.append(attrs[1][1].strip("\\'"))
+            if "href" in content:
+                self.links.append(content[1].strip("\\'"))
 
     def get_links(self):
         return self.links
-
-    def get_complete(self):
-        return self.complete
         
     #Issue: URL have a path but no domain. This is technically consider inside the domain
     #Solution: Accept the URL but add the domain and scheme to the path.
