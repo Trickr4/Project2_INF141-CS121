@@ -71,6 +71,7 @@ class MyHTMLParser(HTMLParser):
     def reset(self):
         HTMLParser.reset(self)
         self.links = []
+        self.complete = []
 
     def handle_starttag(self, tag, attrs):
         for content in attrs:
@@ -79,6 +80,9 @@ class MyHTMLParser(HTMLParser):
 
     def get_links(self):
         return self.links
+
+    def get_complete(self):
+        return self.complete
         
     #Issue: URL have a path but no domain. This is technically consider inside the domain
     #Solution: Accept the URL but add the domain and scheme to the path.
@@ -92,6 +96,8 @@ if __name__ == '__main__':
     parser = MyHTMLParser()
     for line in htmlscript:
         parser.feed(line)
-    for link in parser.get_links():
-        print(str(req.full_url)+link)
+    for path in parser.get_links():
+        #Using urllib.parse.urljoin fixes the issue where weird url links were
+        #combined. Now all the url links seem to be formatted properly
+        print(urllib.parse.urljoin("https://www.ics.uci.edu", path))
     '''
