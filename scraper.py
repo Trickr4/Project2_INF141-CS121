@@ -38,7 +38,14 @@ def extract_next_links(url, resp):
         url = urlopen("https://www.pythonforbeginners.com/code/regular-expression-re-findall")
         break
     return outputLinks
-
+#function to check if the url is crawled already
+def checkIfAlreadyCrawled(url)
+{
+	already_crawled = set()
+	if url not in already_crawled:
+		return false
+	return true
+}
 def is_valid(url):
     try:
         #check if it is within the domains and paths (*.ics.uci.edu/*, *.cs.uci.edu/*, *.informatics.uci.edu/*, *.stat.uci.edu/*, 
@@ -47,6 +54,8 @@ def is_valid(url):
         valids = ["ics.uci.edu/","cs.uci.edu/","information.ics.edu/","stat.uci.edu/"]
         validStr = "".join(valids)
         url_netlock = parsed.netloc
+        checkIfAlreadyCrawled(url_netlock);
+
         if not url_netlock.find(validStr):
             return false
         if parsed.scheme in set(["http", "https"]):
