@@ -7,14 +7,14 @@ from html.parser import HTMLParser
 #this function receives a URL and corresponding web response
 #(for example, the first one will be "http://www.ics.uci.edu" and the Web response will contain the page itself).
 def scraper(url, resp):
-    links = []
-    if is_valid(url):
-        response = resp
+    #links = []
+    #if is_valid(url):
+        #response = resp
         #if response.status>=600 and response.status<=609:
             #TODO -> error
-        if response.status >=200 and response.status <=599:
+        #if response.status >=200 and response.status <=599:
             #TODO ->success
-            links.append(resp.url)
+            #links.append(resp.url)
         
     #if it's a valid page 
     #parse the web response and extract enough information
@@ -25,18 +25,18 @@ def scraper(url, resp):
 
 def extract_next_links(url, resp):
     # Implementation requred.
-    validStatusCodes = [200,301,302,307]
     outputLinks = list()
-    if is_valid(url) and resp.error == None:
-        outputLinks.append(url)
-    
-    while True:
-        '''
-        Open the URL/HTML text file. Find valid URL links and then
-        puts it in outputLinks
-        '''
-        url = urlopen("https://www.pythonforbeginners.com/code/regular-expression-re-findall")
-        break
+    htmlscript = []
+    if is_valid(url):
+        req = urllib.request.Request(url)
+        link = urlopen(req)
+        for line in link:
+            htmlscript.append(str(line).strip('b\''))
+        parser = MyHTMLParser()
+        for line in htmlscript:
+            parser.feed(line)
+        for path in parser.get_links():
+            outputLinks.append(urllib.parse.urljoin(url, path, allow_fragments=false))
     return outputLinks
 
 def is_valid(url):
@@ -48,9 +48,9 @@ def is_valid(url):
         validStr = "".join(valids)
         url_netlock = parsed.netloc
         if not url_netlock.find(validStr):
-            return false
-        if parsed.scheme in set(["http", "https"]):
-            return false
+            return False
+        if parsed.scheme not in set(["http", "https"]):
+            return False
         return not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
             + r"|png|tiff?|mid|mp2|mp3|mp4"
@@ -59,15 +59,14 @@ def is_valid(url):
             + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
             + r"|epub|dll|cnf|tgz|sha1"
             + r"|thmx|mso|arff|rtf|jar|csv"
-            + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower())
+            + r"|rm|smil|wmv|swf|wma|zip|rar|gz|svg)$", parsed.path.lower())
 
     except TypeError:
         print ("TypeError for ", parsed)
         raise
-    
-    '''
-class MyHTMLParser(HTMLParser):
 
+
+class MyHTMLParser(HTMLParser):
     def reset(self):
         HTMLParser.reset(self)
         self.links = []
@@ -76,7 +75,20 @@ class MyHTMLParser(HTMLParser):
         for content in attrs:
             if "href" in content:
                 self.links.append(content[1].strip("\\'"))
+    def get_links(self):
+        return self.links
 
+    
+    '''
+class MyHTMLParser(HTMLParser):
+    def reset(self):
+        HTMLParser.reset(self)
+        self.links = []
+        
+    def handle_starttag(self, tag, attrs):
+        for content in attrs:
+            if "href" in content:
+                self.links.append(content[1].strip("\\'"))
     def get_links(self):
         return self.links
         
