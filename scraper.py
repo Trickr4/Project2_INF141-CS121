@@ -43,8 +43,9 @@ def checkIfAlreadyCrawled(url)
 {
 	already_crawled = set()
 	if url not in already_crawled:
-		return false
-	return true
+		already_crawler.add(url)
+		return true
+	return false
 }
 def is_valid(url):
     try:
@@ -54,7 +55,8 @@ def is_valid(url):
         valids = ["ics.uci.edu/","cs.uci.edu/","information.ics.edu/","stat.uci.edu/"]
         validStr = "".join(valids)
         url_netlock = parsed.netloc
-        checkIfAlreadyCrawled(url_netlock);
+	
+        checkIfAlreadyCrawled(url_netlock);#TODO FIX THE CALLING IN HERE
 
         if not url_netlock.find(validStr):
             return False
