@@ -4,6 +4,8 @@ import urllib
 from urllib.request import urlopen
 from html.parser import HTMLParser
 
+
+already_crawled = set()
 #this function receives a URL and corresponding web response
 #(for example, the first one will be "http://www.ics.uci.edu" and the Web response will contain the page itself).
 def scraper(url, resp):
@@ -33,10 +35,19 @@ def extract_next_links(url, resp):
 
 #function to check if the url is crawled already
 def checkIfAlreadyCrawled(url):
-    already_crawled = set()
+    
     if url not in already_crawled:
         already_crawled.add(url)
         return True
+    return False
+
+
+#function to check if url netloc matches url domains we are allowed to crawl
+def checkNetloc(netloc):
+    valids = ["ics.uci.edu","cs.uci.edu","information.ics.edu","stat.uci.edu"]
+    for domain in valids:
+        if netloc.strip('www.') == domain:
+            return True
     return False
 
 
@@ -45,22 +56,22 @@ def is_valid(url):
         #check if it is within the domains and paths (*.ics.uci.edu/*, *.cs.uci.edu/*, *.informatics.uci.edu/*, *.stat.uci.edu/*, 
         #today.uci.edu/department/information_computer_sciences/* )
         parsed = urlparse(url)
-        valids = ["ics.uci.edu/","cs.uci.edu/","information.ics.edu/","stat.uci.edu/"]
-        validStr = "".join(valids)
-        url_netlock = parsed.netloc
 	
         if not checkIfAlreadyCrawled(url):
             return False
 
-        #since netloc comes with www., it wasn't finding a match in validStr
-        if not url_netlock[4::] in validStr:
+        #replaced with helper function to deal with netloc match
+        if not checkNetloc(parsed.netloc):
             return False
         
         if parsed.scheme not in set(["http", "https"]):
             return False
+
+        if "json" in parsed.path:
+            return False
         
         return not re.match(
-            r".*\.(css|js|bmp|gif|jpe?g|ico|php"
+            r".*\.(css|js|bmp|gif|jpe?g|ico|php|json"
             + r"|png|tiff?|mid|mp2|mp3|mp4"
             + r"|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf"
             + r"|ps|eps|tex|ppt|pptx|doc|docx|xls|xlsx|names"
@@ -86,35 +97,3 @@ class MyHTMLParser(HTMLParser):
                 
     def get_links(self):
         return self.links
-
-    
-    '''
-class MyHTMLParser(HTMLParser):
-    def reset(self):
-        HTMLParser.reset(self)
-        self.links = []
-        
-    def handle_starttag(self, tag, attrs):
-        for content in attrs:
-            if "href" in content:
-                self.links.append(content[1].strip("\\'"))
-    def get_links(self):
-        return self.links
-        
-    #Issue: URL have a path but no domain. This is technically consider inside the domain
-    #Solution: Accept the URL but add the domain and scheme to the path.
-    #  then added it to list of links.
-if __name__ == '__main__':
-    htmlscript = []
-    req = urllib.request.Request("https://www.ics.uci.edu")
-    url = urlopen(req)
-    for line in url:
-        htmlscript.append(str(line).strip('b\''))
-    parser = MyHTMLParser()
-    for line in htmlscript:
-        parser.feed(line)
-    for path in parser.get_links():
-        #Using urllib.parse.urljoin fixes the issue where weird url links were
-        #combined. Now all the url links seem to be formatted properly
-        print(urllib.parse.urljoin("https://www.ics.uci.edu", path))
-    '''
