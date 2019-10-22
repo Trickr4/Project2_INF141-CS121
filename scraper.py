@@ -17,7 +17,8 @@ def extract_next_links(url, resp):
     outputLinks = list()
     htmlscript = []
     url_netloc = urlparse(url).netloc
-    if is_valid(url) and 200 <= resp.status <= 599:
+    #I checked the link talking about 
+    if is_valid(url) and 200 <= resp.status <= 202:
         req = urllib.request.Request(url)
         link = urlopen(req)
         for line in link:
