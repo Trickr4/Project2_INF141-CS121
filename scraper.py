@@ -4,7 +4,7 @@ import urllib
 from urllib.request import urlopen
 from html.parser import HTMLParser
 
-
+#this is a set of crawled urls
 already_crawled = set()
 #this function receives a URL and corresponding web response
 #(for example, the first one will be "http://www.ics.uci.edu" and the Web response will contain the page itself).
