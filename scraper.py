@@ -14,13 +14,24 @@ def scraper(url, resp):
     return [link for link in links if is_valid(link)]
 
 
+#function used to identify response status
+def valid_resp(resp):
+	if 200 <= resp.status <= 202:
+		return True 
+	elif 300 <= resp.status <=304 or resp.status == 307:
+		return True 
+	else:
+		return False
+
+
 def extract_next_links(url, resp):
     # Implementation requred.
     outputLinks = list()
     htmlscript = []
     url_netloc = urlparse(url).netloc
-    #I checked the link talking about
-    if is_valid(url) and 200 <= resp.status <= 202 and checkIfAlreadyCrawled(url):
+    #replaced resp.status condition with a function that checks it instead so
+    #the code won't be as messy.
+    if is_valid(url) and valid_resp(resp) and checkIfAlreadyCrawled(url):
         req = urllib.request.Request(url)
         link = urlopen(req)
         for line in link:
@@ -41,6 +52,7 @@ def checkIfAlreadyCrawled(url):
         already_crawled.add(url)
         return True
     return False
+
 
 #function to check if url netloc matches url domains we are allowed to crawl
 def checkNetloc(netloc):
