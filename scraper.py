@@ -35,14 +35,12 @@ def extract_next_links(url, resp):
 
 #function to check if the url is crawled already
 def checkIfAlreadyCrawled(url):
-    
-    if url not in already_crawled:
-	if url[-1]=="/":
-	    url = url[:-1]    
+    if url[-1]=="/":
+	    url = url[:-1]
+    if url not in already_crawled:  
         already_crawled.add(url)
         return True
     return False
-
 
 #function to check if url netloc matches url domains we are allowed to crawl
 def checkNetloc(netloc):
