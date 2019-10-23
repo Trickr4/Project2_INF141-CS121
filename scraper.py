@@ -19,8 +19,8 @@ def extract_next_links(url, resp):
     outputLinks = list()
     htmlscript = []
     url_netloc = urlparse(url).netloc
-    #I checked the link talking about 
-    if is_valid(url) and 200 <= resp.status <= 202:
+    #I checked the link talking about
+    if is_valid(url) and 200 <= resp.status <= 202 and checkIfAlreadyCrawled(url):
         req = urllib.request.Request(url)
         link = urlopen(req)
         for line in link:
@@ -44,7 +44,7 @@ def checkIfAlreadyCrawled(url):
 
 #function to check if url netloc matches url domains we are allowed to crawl
 def checkNetloc(netloc):
-    valids = ["ics.uci.edu","cs.uci.edu","information.ics.edu","stat.uci.edu"]
+    valids = ["ics.uci.edu","cs.uci.edu","information.ics.edu","stat.uci.edu","informatics.uci.edu"]
     for domain in valids:
         if netloc.strip('www.') == domain:
             return True
@@ -56,10 +56,7 @@ def is_valid(url):
         #check if it is within the domains and paths (*.ics.uci.edu/*, *.cs.uci.edu/*, *.informatics.uci.edu/*, *.stat.uci.edu/*, 
         #today.uci.edu/department/information_computer_sciences/* )
         parsed = urlparse(url)
-	
-        if not checkIfAlreadyCrawled(url):
-            return False
-
+        
         #replaced with helper function to deal with netloc match
         if not checkNetloc(parsed.netloc):
             return False
