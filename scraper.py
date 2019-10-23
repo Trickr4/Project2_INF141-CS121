@@ -37,6 +37,8 @@ def extract_next_links(url, resp):
 def checkIfAlreadyCrawled(url):
     
     if url not in already_crawled:
+	if url[-1]=="/":
+	    url = url[:-1]    
         already_crawled.add(url)
         return True
     return False
