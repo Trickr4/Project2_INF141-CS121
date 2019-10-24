@@ -16,12 +16,12 @@ def scraper(url, resp):
 
 #function used to identify response status
 def valid_resp(resp):
-    if 200 <= resp.status <= 202:
-        return True 
-    elif 300 <= resp.status <=304 or resp.status == 307:
-        return True 
-    else:
-        return False
+	if 200 <= resp.status <= 202:
+		return True 
+	elif 300 <= resp.status <=304 or resp.status == 307:
+		return True 
+	else:
+		return False
 
 
 def extract_next_links(url, resp):
@@ -55,26 +55,12 @@ def checkIfAlreadyCrawled(url):
 
 
 #function to check if url netloc matches url domains we are allowed to crawl
-def checkDomain(url):
+def checkNetloc(netloc):
     valids = ["ics.uci.edu","cs.uci.edu","information.ics.edu","stat.uci.edu","informatics.uci.edu"]
-    #only domain that has to check path as well, so i made it a separate if statement
-    if url.netloc.strip('www.') == "today.uci.edu" and \
-       "/department/information_computer_sciences" in url.path:
-        return True 
-    else:
-        for domain in valids:
-            if domain in url.netloc.strip('www.'):
-                return True
+    for domain in valids:
+        if netloc.strip('www.') == domain:
+            return True
     return False
-
-
-#function to check if the path has any invalid file extensions
-def checkPath(path):
-    invalids = ["json", "pdf"] 
-    for word in invalids:
-        if word in path:
-                return True 
-    return False 
 
 
 def is_valid(url):
@@ -84,14 +70,14 @@ def is_valid(url):
         parsed = urlparse(url)
         
         #replaced with helper function to deal with netloc match
-        if not checkDomain(parsed):
+        if not checkNetloc(parsed.netloc):
             return False
         
         if parsed.scheme not in set(["http", "https"]):
             return False
 
-        if checkPath(parsed.path.lower()):
-        	return False
+        if "json" in parsed.path:
+            return False
         
         return not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico|php"
@@ -116,7 +102,7 @@ class MyHTMLParser(HTMLParser):
         
     def handle_starttag(self, tag, attrs):
         for content in attrs:
-            if "href" in content:
+            if "href" in content and tag!="":
                 self.links.append(content[1].strip("\\'"))
                 
     def get_links(self):
