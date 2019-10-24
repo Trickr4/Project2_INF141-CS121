@@ -19,9 +19,9 @@ def valid_resp(resp):
     if 200 <= resp.status <= 202:
         return True 
     elif 300 <= resp.status <=304 or resp.status == 307:
-	return True 
+        return True
     else:
-	return False
+        return False
 
 
 def extract_next_links(url, resp):
@@ -54,6 +54,15 @@ def checkIfAlreadyCrawled(url):
     return False
 
 
+#function to check if the path has any invalid file extensions
+def checkPath(path):
+    invalids = ["json", "pdf"] 
+    for word in invalids:
+        if word in path:
+                return True 
+    return False 
+
+
 #function to check if url netloc matches url domains we are allowed to crawl
 def checkDomain(url):
     valids = ["ics.uci.edu","cs.uci.edu","information.ics.edu","stat.uci.edu","informatics.uci.edu"]
@@ -81,8 +90,8 @@ def is_valid(url):
         if parsed.scheme not in set(["http", "https"]):
             return False
 
-        if "json" in parsed.path:
-            return False
+        if checkPath(parsed.path.lower()):
+        	return False
         
         return not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico|php"
