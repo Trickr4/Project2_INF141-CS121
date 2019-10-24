@@ -55,11 +55,16 @@ def checkIfAlreadyCrawled(url):
 
 
 #function to check if url netloc matches url domains we are allowed to crawl
-def checkNetloc(netloc):
+def checkDomain(url):
     valids = ["ics.uci.edu","cs.uci.edu","information.ics.edu","stat.uci.edu","informatics.uci.edu"]
-    for domain in valids:
-        if netloc.strip('www.') == domain:
-            return True
+    #only domain that has to check path as well, so i made it a separate if statement
+    if url.netloc.strip('www.') == "today.uci.edu" and \
+       "/department/information_computer_sciences" in url.path:
+        return True 
+    else:
+        for domain in valids:
+            if domain in url.netloc.strip('www.'):
+                return True
     return False
 
 
@@ -70,7 +75,7 @@ def is_valid(url):
         parsed = urlparse(url)
         
         #replaced with helper function to deal with netloc match
-        if not checkNetloc(parsed.netloc):
+        if not checkDomain(parsed):
             return False
         
         if parsed.scheme not in set(["http", "https"]):
