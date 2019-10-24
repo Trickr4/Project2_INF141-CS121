@@ -16,12 +16,12 @@ def scraper(url, resp):
 
 #function used to identify response status
 def valid_resp(resp):
-	if 200 <= resp.status <= 202:
-		return True 
-	elif 300 <= resp.status <=304 or resp.status == 307:
-		return True 
-	else:
-		return False
+    if 200 <= resp.status <= 202:
+        return True 
+    elif 300 <= resp.status <=304 or resp.status == 307:
+	return True 
+    else:
+	return False
 
 
 def extract_next_links(url, resp):
@@ -104,10 +104,11 @@ class MyHTMLParser(HTMLParser):
     def reset(self):
         HTMLParser.reset(self)
         self.links = []
+        self.empty = []
         
     def handle_starttag(self, tag, attrs):
         for content in attrs:
-            if "href" in content and tag!="":
+            if "href" in content:
                 self.links.append(content[1].strip("\\'"))
                 
     def get_links(self):
