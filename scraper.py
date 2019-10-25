@@ -92,6 +92,10 @@ def is_valid(url):
         if re.search(r'[0-9][0-9][-/_][0-9][0-9][-/_][0-9][0-9]',url):
             return False
         
+	#check if it is a calendar(trap)
+	if re.search(r'[0-9][0-9][-/_][0-9][0-9][-/_][0-9][0-9]',url):
+            return false
+			
         return not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico|php"
             + r"|png|tiff?|mid|mp2|mp3|mp4"
