@@ -6,9 +6,15 @@ from utils.response import Response
 
 def download(url, config, logger=None):
     host, port = config.cache_server
-    resp = requests.get(
-        f"http://{host}:{port}/",
-        params=[("q", f"{url}"), ("u", f"{config.user_agent}")])
+    while True:
+    try:
+        resp = requests.get(
+            f"http://{host}:{port}/",
+            params=[("q", f"{url}"), ("u", f"{config.user_agent}")],
+            timeout=(5,60))
+        break
+    except:
+        continue
     if resp:
         return Response(cbor.loads(resp.content))
     logger.error(f"Spacetime Response error {resp} with url {url}.")
