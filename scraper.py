@@ -1,8 +1,9 @@
 import re
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urldefrag
 import urllib
 from urllib.request import urlopen
 from html.parser import HTMLParser
+from bs4 import BeautifulSoup
 
 #this is a set of crawled urls
 already_crawled = set()
@@ -27,20 +28,15 @@ def valid_resp(resp):
 def extract_next_links(url, resp):
     # Implementation requred.
     outputLinks = list()
-    htmlscript = []
-    url_netloc = urlparse(url).netloc
+    parsed = urlparse(url)
     #replaced resp.status condition with a function that checks it instead so
     #the code won't be as messy.
     if is_valid(url) and valid_resp(resp) and checkIfAlreadyCrawled(url):
-        req = urllib.request.Request(url)
-        link = urlopen(req)
-        for line in link:
-            htmlscript.append(str(line).strip('b\''))
-        parser = MyHTMLParser()
-        for line in htmlscript:
-            parser.feed(line)
-        for path in parser.get_links():
-            outputLinks.append(urllib.parse.urljoin(url_netloc, path, allow_fragments=False))
+        html_doc = urllib.request.Request(url)
+        soup = BeautifulSoup(urlopen(html_doc), 'html.parser')
+        for path in soup.find_all('a'):
+            link = urllib.parse.urljoin(parsed.netloc, path.get('href'))
+            outputLinks.append(urldefrag(link)[0])
     return outputLinks
 
 
