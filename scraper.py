@@ -2,7 +2,6 @@ import re
 from urllib.parse import urlparse, urldefrag
 import urllib
 from urllib.request import urlopen
-from html.parser import HTMLParser
 from bs4 import BeautifulSoup
 
 #this is a set of crawled urls
@@ -88,6 +87,10 @@ def is_valid(url):
 
         if checkPath(parsed.path.lower()):
         	return False
+
+        #check if it is a calendar(trap)
+        if re.search(r'[0-9][0-9][-/_][0-9][0-9][-/_][0-9][0-9]',url):
+            return False
         
         return not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico|php"
@@ -103,18 +106,3 @@ def is_valid(url):
     except TypeError:
         print ("TypeError for ", parsed)
         raise
-
-
-class MyHTMLParser(HTMLParser):
-    def reset(self):
-        HTMLParser.reset(self)
-        self.links = []
-        self.empty = []
-        
-    def handle_starttag(self, tag, attrs):
-        for content in attrs:
-            if "href" in content:
-                self.links.append(content[1].strip("\\'"))
-                
-    def get_links(self):
-        return self.links
