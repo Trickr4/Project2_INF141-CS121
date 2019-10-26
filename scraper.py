@@ -31,12 +31,12 @@ def extract_next_links(url, resp):
             parser.feed(line)
         for path in parser.get_links():
             fullUrl = urllib.parse.urljoin(url_netloc, path)
-            outputLinks.append(urldefrag(fullUrl))
+            outputLinks.append(urldefrag(fullUrl)[0])
     elif is_valid(url) and 300 <= resp.status <= 302 and checkIfAlreadyCrawled(url):
         if resp.raw_response.history.length != 0:
             for link in resp.raw_response.history:
                 fullUrl = urllib.parse.urljoin(url_netloc, link.url)
-                outputLinks.append(urldefrag(fullUrl))
+                outputLinks.append(urldefrag(fullUrl)[0])
                 print("Adding redirect to list of extracted links")
     return outputLinks
 
