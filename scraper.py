@@ -33,6 +33,7 @@ def extract_next_links(url, resp):
         for path in parser.get_links():
             fullUrl = urllib.parse.urljoin(url_netloc, path)
             outputLinks.append(urldefrag(fullUrl)[0])
+    #checking for links in redirects with response 3xx
     elif is_valid(url) and 300 <= resp.status <= 302 and checkIfAlreadyCrawled(url):
         if resp.raw_response.history.length != 0:
             for link in resp.raw_response.history:
@@ -73,6 +74,7 @@ def is_valid(url):
         
         if parsed.scheme not in set(["http", "https"]):
             return False
+        
         dontCrawled =["css","js","bmp","gif","jpeg","ico","php","png","tiff",
                       "mid","mp2","mp3","mp4","wav","avi","mov","mpeg","ram",
                       "m4v","mkv","ogg","ogv","pdf","ps","eps","tex","ppt",
@@ -80,9 +82,11 @@ def is_valid(url):
                       "exe","bz2","tar","msi","bin","7z","psd","dmg","iso",
                       "epub","dll","cnf","tgz","sha1","thmx","mso","arff",
                       "rtf","jar","csv","rm","smil","wmv","swf","wma","zip",
-                      "rar","gz","svg","txt","py","rkt","ss","scm", "json"]
+                      "rar","gz","svg","txt","py","rkt","ss","scm", "json",
+                      "pdf"]
+
         for n in dontCrawled:
-            if (n) in parsed.query:
+            if (n) in parsed.query or (n) in parsed.path:
                 return False
 				
         if "calendar" in parsed.path:
@@ -98,7 +102,7 @@ def is_valid(url):
             + r"|epub|dll|cnf|tgz|sha1"
             + r"|thmx|mso|arff|rtf|jar|csv"
             + r"|rm|smil|wmv|swf|wma|zip|rar|gz|svg"
-            + r"|txt|py|rkt|ss|scm)$", parsed.path.lower())
+            + r"|txt|py|rkt|ss|scm|odc|sas)$", parsed.path.lower())
 
     except TypeError:
         print ("TypeError for ", parsed)
