@@ -1,5 +1,5 @@
 import re
-from urllib.parse import urlparse
+from urllib.parse import urlparse,urldefrag
 import urllib
 from urllib.request import urlopen
 from html.parser import HTMLParser
@@ -39,6 +39,7 @@ def extract_next_links(url, resp):
                 fullUrl = urllib.parse.urljoin(url_netloc, link.url)
                 outputLinks.append(urldefrag(fullUrl)[0])
                 print("Adding redirect to list of extracted links")
+    return outputLinks
 
 
 #function to check if the url is crawled already
@@ -72,7 +73,14 @@ def is_valid(url):
         
         if parsed.scheme not in set(["http", "https"]):
             return False
-        dontCrawled =["css","js","bmp","gif","jpeg","ico","php","png","tiff","mid","mp2","mp3","mp4","wav","avi","mov","mpeg","ram","m4v","mkv","ogg","ogv","pdf","ps","eps","tex","ppt","pptx","doc","docx","xls","xlsx|names","data","dat","exe","bz2","tar","msi","bin","7z","psd","dmg","iso","epub","dll","cnf","tgz","sha1","thmx","mso","arff","rtf","jar","csv","rm","smil","wmv","swf","wma","zip","rar","gz","svg","txt","py","rkt","ss","scm"]
+        dontCrawled =["css","js","bmp","gif","jpeg","ico","php","png","tiff",
+                      "mid","mp2","mp3","mp4","wav","avi","mov","mpeg","ram",
+                      "m4v","mkv","ogg","ogv","pdf","ps","eps","tex","ppt",
+                      "pptx","doc","docx","xls","xlsx|names","data","dat",
+                      "exe","bz2","tar","msi","bin","7z","psd","dmg","iso",
+                      "epub","dll","cnf","tgz","sha1","thmx","mso","arff",
+                      "rtf","jar","csv","rm","smil","wmv","swf","wma","zip",
+                      "rar","gz","svg","txt","py","rkt","ss","scm", "json"]
         for n in dontCrawled:
             if (n) in parsed.query:
                 return False
