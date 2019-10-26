@@ -30,7 +30,7 @@ def extract_next_links(url, resp):
     parsed = urlparse(url)
     #replaced resp.status condition with a function that checks it instead so
     #the code won't be as messy.
-    if is_valid(url) and valid_resp(resp) and checkIfAlreadyCrawled(url):
+    if is_valid(url) and valid_resp(resp):
         html_doc = urllib.request.Request(url)
         soup = BeautifulSoup(urlopen(html_doc), 'html.parser')
         for path in soup.find_all('a'):
@@ -85,7 +85,8 @@ def is_valid(url):
         if parsed.scheme not in set(["http", "https"]):
             return False
 
-        if checkPath(parsed.path.lower()):
+        #checks if the path has any invalid extensions
+        if checkPath(parsed.path):
         	return False
 
         #check if it is a calendar(trap)
