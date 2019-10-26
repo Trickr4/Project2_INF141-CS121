@@ -75,9 +75,10 @@ def is_valid(url):
 
         
         dontCrawled = ["css","js","bmp","gif","jpe?g","ico","php","json","png","tiff?","mid","mp2","mp3","mp4","wav","avi","mov","mpeg","ram","m4v","mkv","ogg","ogv","pdf","ps","eps","tex","ppt","pptx","doc","docx","xls","xlsx","names","data","dat","exe","bz2","tar","msi","bin","7z","psd","dmg","iso","epub","dll","cnf","tgz","sha1","thmx","mso","arff","rtf","jar","csv","rm","smil","wmv","swf","wma","zip","rar","gz","svg"]
-        for n in dontCrawled:
-	    #I CHANGE THIS ONE
-            if ("."+n) in parsed.path:
+        #check the query
+	for n in dontCrawled:
+	    
+            if ("."+n) in parsed.query:
                 print(n,"in this so dont crawl this",parsed.query)
                 return False
 
@@ -86,7 +87,7 @@ def is_valid(url):
         if re.search(r'[0-9][0-9][-/_][0-9][0-9][-/_]?[0-9]?[0-9]?',parsed.path):
             #print("this is a trap (calendar) which the url is ",url)
             return False
-        
+        #check the path
         return not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico|php"
             + r"|png|tiff?|mid|mp2|mp3|mp4"
