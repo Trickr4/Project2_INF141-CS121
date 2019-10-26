@@ -1,5 +1,5 @@
 import re
-from urllib.parse import urlparse, urldefrag
+from urllib.parse import urlparse
 import urllib
 from urllib.request import urlopen
 from html.parser import HTMLParser
@@ -14,6 +14,7 @@ def scraper(url, resp):
     return [link for link in links if is_valid(link)]
 
 
+
 def extract_next_links(url, resp):
     # Implementation requred.
     outputLinks = list()
@@ -21,7 +22,7 @@ def extract_next_links(url, resp):
     url_netloc = urlparse(url).netloc
     #replaced resp.status condition with a function that checks it instead so
     #the code won't be as messy.
-    if is_valid(url) and 200 <= resp.status <= 202 and checkIfAlreadyCrawled(url):
+    if is_valid(url) and 200<=resp.status<=202 and checkIfAlreadyCrawled(url):
         req = urllib.request.Request(url)
         link = urlopen(req)
         for line in link:
@@ -30,14 +31,11 @@ def extract_next_links(url, resp):
         for line in htmlscript:
             parser.feed(line)
         for path in parser.get_links():
-            fullUrl = urllib.parse.urljoin(url_netloc, path)
-            outputLinks.append(urldefrag(fullUrl))
-    elif is_valid(url) and 300 <= resp.status <= 302 and checkIfAlreadyCrawled(url):
-        if resp.raw_response.history.length != 0:
+            outputLinks.append(urllib.parse.urljoin(url_netloc, path, allow_fragments=False))
+    elif is_valid(url) and 300<=resp.status<=302 and checkIfAlreadyCrawled(url):
+        if resp.raw_response.history.length !=0:
             for link in resp.raw_response.history:
-                fullUrl = urllib.parse.urljoin(url_netloc, link.url)
-                outputLinks.append(urldefrag(fullUrl))
-                print("Adding redirect to list of extracted links")
+                outputLinks.append(urllib.parse.urljoin(url_netloc,link.url,allow_fragments=False))
     return outputLinks
 
 
@@ -72,8 +70,6 @@ def is_valid(url):
         
         if parsed.scheme not in set(["http", "https"]):
             return False
-
-        
         dontCrawled =["css","js","bmp","gif","jpeg","ico","php","png","tiff","mid","mp2","mp3","mp4","wav","avi","mov","mpeg","ram","m4v","mkv","ogg","ogv","pdf","ps","eps","tex","ppt","pptx","doc","docx","xls","xlsx|names","data","dat","exe","bz2","tar","msi","bin","7z","psd","dmg","iso","epub","dll","cnf","tgz","sha1","thmx","mso","arff","rtf","jar","csv","rm","smil","wmv","swf","wma","zip","rar","gz","svg","txt","py","rkt","ss","scm"]
         for n in dontCrawled:
             if (n) in parsed.query:
@@ -81,6 +77,7 @@ def is_valid(url):
 				
         if "calendar" in parsed.path:
             return False
+
 
         return not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico|php"
@@ -107,7 +104,6 @@ class MyHTMLParser(HTMLParser):
         for content in attrs:
             if "href" in content:
                 self.links.append(content[1].strip("\\'"))
-                
     def get_links(self):
         return self.links
 	
