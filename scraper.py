@@ -3,6 +3,7 @@ from urllib.parse import urlparse,urldefrag
 import urllib
 from urllib.request import urlopen
 from html.parser import HTMLParser
+from bs4 import BeautifulSoup
 
 #this is a set of crawled urls
 already_crawled = set()
@@ -18,26 +19,20 @@ def scraper(url, resp):
 def extract_next_links(url, resp):
     # Implementation requred.
     outputLinks = list()
-    htmlscript = []
-    url_netloc = urlparse(url).netloc
+    parsed = urlparse(url)
     #replaced resp.status condition with a function that checks it instead so
     #the code won't be as messy.
     if is_valid(url) and 200<=resp.status<=202 and checkIfAlreadyCrawled(url):
-        req = urllib.request.Request(url)
-        link = urlopen(req)
-        for line in link:
-            htmlscript.append(str(line).strip('b\''))
-        parser = MyHTMLParser()
-        for line in htmlscript:
-            parser.feed(line)
-        for path in parser.get_links():
-            fullUrl = urllib.parse.urljoin(url_netloc, path)
-            outputLinks.append(urldefrag(fullUrl)[0])
+        html_doc = resp.raw_response.content
+        soup = BeautifulSoup(html_doc, 'html.parser')
+        for path in soup.find_all('a'):
+            link = urllib.parse.urljoin(parsed.netloc, path.get('href'))
+            outputLinks.append(urldefrag(link)[0])
     #checking for links in redirects with response 3xx
-    elif is_valid(url) and 300 <= resp.status <= 302 and checkIfAlreadyCrawled(url):
+    if is_valid(url) and 300 <= resp.status <= 302:
         if resp.raw_response.history.length != 0:
             for link in resp.raw_response.history:
-                fullUrl = urllib.parse.urljoin(url_netloc, link.url)
+                fullUrl = urllib.parse.urljoin(parsed.netloc, link.url)
                 outputLinks.append(urldefrag(fullUrl)[0])
                 print("Adding redirect to list of extracted links")
     return outputLinks
@@ -75,7 +70,7 @@ def is_valid(url):
         if parsed.scheme not in set(["http", "https"]):
             return False
         
-        dontCrawled =["css","js","bmp","gif","jpeg","ico","php","png","tiff",
+        dontCrawled =["css","js","bmp","gif","jpeg","ico","png","tiff",
                       "mid","mp2","mp3","mp4","wav","avi","mov","mpeg","ram",
                       "m4v","mkv","ogg","ogv","pdf","ps","eps","tex","ppt",
                       "pptx","doc","docx","xls","xlsx|names","data","dat",
@@ -94,7 +89,7 @@ def is_valid(url):
 
 
         return not re.match(
-            r".*\.(css|js|bmp|gif|jpe?g|ico|php"
+            r".*\.(css|js|bmp|gif|jpe?g|ico"
             + r"|png|tiff?|mid|mp2|mp3|mp4"
             + r"|wav|avi|mov|mpeg|ram|m4v|mkv|ogg|ogv|pdf"
             + r"|ps|eps|tex|ppt|pptx|doc|docx|xls|xlsx|names"
