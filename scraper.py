@@ -69,7 +69,7 @@ def is_valid(url):
         parsed = urlparse(url)
         
         #replaced with helper function to deal with netloc match
-        if not checkNetloc(parsed.netloc):
+        if not checkDomain(parsed):
             return False
         
         if parsed.scheme not in set(["http", "https"]):
