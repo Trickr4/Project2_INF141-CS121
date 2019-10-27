@@ -45,7 +45,9 @@ def extract_next_links(url, resp):
                 fullUrl = urllib.parse.urljoin(parsed.netloc, link.url)
                 outputLinks.append(urldefrag(fullUrl)[0])
                 print("Adding redirect to list of extracted links")
-    #checks for traps
+   if is_valid(url) and resp.status>400:
+        print("this is invlaid")    
+#checks for traps
     trapList = checkIfTrap(outputLinks)
     if len(trapList) >= 3:
         for link in trapList:
