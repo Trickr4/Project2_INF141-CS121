@@ -1,9 +1,8 @@
 import re
 from urllib.parse import urlparse,urldefrag
 import urllib
-from urllib.request import urlopen
-from html.parser import HTMLParser
 from bs4 import BeautifulSoup
+
 
 #this is a set of crawled urls
 already_crawled = set()
@@ -49,11 +48,17 @@ def checkIfAlreadyCrawled(url):
 
 
 #function to check if url netloc matches url domains we are allowed to crawl
-def checkNetloc(netloc):
-    valids = ["ics.uci.edu","cs.uci.edu","information.ics.edu","stat.uci.edu","informatics.uci.edu"]
-    for domain in valids:
-        if netloc.strip('www.') == domain:
-            return True
+def checkDomain(url):
+    valids = ["ics.uci.edu","cs.uci.edu","information.ics.edu",
+              "stat.uci.edu","informatics.uci.edu"]
+    #only domain that has to check path as well, so i made it a separate if statement
+    if url.netloc.strip('www.') == "today.uci.edu" and \
+       "/department/information_computer_sciences" in url.path:
+        return True 
+    else:
+        for domain in valids:
+            if domain in url.netloc.strip('www.'):
+                return True
     return False
 
 
@@ -102,17 +107,4 @@ def is_valid(url):
     except TypeError:
         print ("TypeError for ", parsed)
         raise
-
-
-class MyHTMLParser(HTMLParser):
-    def reset(self):
-        HTMLParser.reset(self)
-        self.links = []
-        
-    def handle_starttag(self, tag, attrs):
-        for content in attrs:
-            if "href" in content:
-                self.links.append(content[1].strip("\\'"))
-    def get_links(self):
-        return self.links
 	
