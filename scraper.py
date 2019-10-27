@@ -2,6 +2,7 @@ import re
 from urllib.parse import urlparse,urldefrag
 import urllib
 from bs4 import BeautifulSoup
+from collections import defaultdict
 
 
 #this is a set of crawled urls
@@ -13,6 +14,16 @@ def scraper(url, resp):
     #return the list of URLs "scapped" from that page
     return [link for link in links if is_valid(link)]
 
+
+def checkIfTrap(links: list) -> list:
+    dateSet = set()
+    trapList = []
+    for link in links:
+        date = re.search(r'\d{4}-\d{2}[-\d{2}]?',link)
+        if date:
+            dateSet.add(date.group())
+            trapList.append(link)
+    return trapList
 
 
 def extract_next_links(url, resp):
@@ -34,6 +45,11 @@ def extract_next_links(url, resp):
                 fullUrl = urllib.parse.urljoin(parsed.netloc, link.url)
                 outputLinks.append(urldefrag(fullUrl)[0])
                 print("Adding redirect to list of extracted links")
+    #checks for traps
+    trapList = checkIfTrap(outputLinks)
+    if len(trapList) >= 3:
+        for link in trapList:
+            outputLinks.remove(link)
     return outputLinks
 
 
@@ -83,14 +99,11 @@ def is_valid(url):
                       "epub","dll","cnf","tgz","sha1","thmx","mso","arff",
                       "rtf","jar","csv","rm","smil","wmv","swf","wma","zip",
                       "rar","gz","svg","txt","py","rkt","ss","scm", "json",
-                      "pdf"]
+                      "pdf", "wp-content", "calendar", "ical"]
 
         for n in dontCrawled:
             if (n) in parsed.query or (n) in parsed.path:
                 return False
-				
-        if "calendar" in parsed.path:
-            return False
 
 
         return not re.match(
