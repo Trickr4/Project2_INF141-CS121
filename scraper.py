@@ -6,62 +6,6 @@ from collections import defaultdict
 
 #this is a set of crawled urls
 already_crawled = set()
-countUnique = 0 
-
-#dict for no 2
-longestPage={}
-#dict for no 3
-wordDict = {}
-
-#answeing no 1
-def no1(url):
-    uniqueUrl = []
-    parsed = urlparse(url)
-    if parsed.netloc not in uniqueUrl:
-        uniqueUrl.append(parsed)
-    countUnique++
-#answering no 2
-def no2(url,html_doc):
-    words = []
-    soup = BeautifulSoup(html_doc, 'html.parser')
-    for word in soup.find_all('div',{'class':'entire-content'}:
-        c = word.text
-		w = c.lower().split()
-		for ww in w:
-		    words.append(ww)
-	longestPage[url]=len(words)
-#answering no 3
-def no3(html_doc):
-    allWords= []
-    soup = BeautifulSoup(html_doc, 'html.parser')
-    for word in soup.find_all('div',{'class':'entire-content'}:
-        c = word.text
-		w = c.lower().split()
-		for ww in w:
-            allWords.append(ww)
-			
-	removeSymbol(allWords)
-def removeSymbol(allWords):
-    allWordsWithoutSymbol = []
-    allSymbols='"!~`#$%^&*()_+-=<,>.?/:;"'\'
-    for word in allWords:
-        for symbol in symbols:
-            if word!=symbol:
-                allWordsWithoutSymbol.append(word)
-	addToDict(allWordsWithoutSymbol)
-def addToDict(allWordsWithoutSymbol):
-    for word in allWordsWithoutSymbol:
-        if word in wordDict:
-            wordDict[word]+=1
-        else:
-            wordDict[word]=1
-def find50Most(wordDict):
-    most50Words = []
-    for i in range(0,50):
-        most50Words.append(max(wordDict,key = wordDict.get()))
-	print(most50Words)
-    
-
 
 #this function receives a URL and corresponding web response
 #(for example, the first one will be "http://www.ics.uci.edu" and the Web response will contain the page itself).
@@ -85,38 +29,38 @@ def extract_next_links(url, resp):
     # Implementation requred.
     outputLinks = list()
     parsed = urlparse(url)
+
+    #writing urls into url.txt
+    file =open("url.txt","w"0
+	       
     #replaced resp.status condition with a function that checks it instead so
     #the code won't be as messy.
     if is_valid(url) and 200<=resp.status<=202 and checkIfAlreadyCrawled(url):
         html_doc = resp.raw_response.content
         soup = BeautifulSoup(html_doc, 'html.parser')
+        file.write(url)
         for path in soup.find_all('a'):
             link = urllib.parse.urljoin(parsed.netloc, path.get('href'))
             outputLinks.append(urldefrag(link)[0])
-        #answer no 1
-        no1(url)
-		#answer no 2
-		no2(url,html_doc)
-        #answer no3
-        no3(html_doc)
+            file.write(urldefrag(link)[0])
+
     #checking for links in redirects with response 3xx
     if is_valid(url) and 300 <= resp.status <= 302:
+        file.write(url)
         if resp.raw_response.history.length != 0:
             for link in resp.raw_response.history:
                 fullUrl = urllib.parse.urljoin(parsed.netloc, link.url)
                 outputLinks.append(urldefrag(fullUrl)[0])
                 print("Adding redirect to list of extracted links")
-        #answer no 1
-        no1(url)
-		#answer no 2
-		no2(url,html_doc)
-        #answer no3
-        no3(html_doc)
+                file.write(urldefrag(link)[0])
+
+    
 #checks for traps
     trapList = checkIfTrap(outputLinks)
     if len(trapList) >= 3:
         for link in trapList:
             outputLinks.remove(link)
+    file.close()
     return outputLinks
 
 
