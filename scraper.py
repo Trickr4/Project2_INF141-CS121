@@ -7,6 +7,7 @@ from collections import defaultdict
 
 #this is a set of crawled urls
 already_crawled = set()
+countUnique = 0
 #this function receives a URL and corresponding web response
 #(for example, the first one will be "http://www.ics.uci.edu" and the Web response will contain the page itself).
 def scraper(url, resp):
@@ -14,6 +15,13 @@ def scraper(url, resp):
     #return the list of URLs "scapped" from that page
     return [link for link in links if is_valid(link)]
 
+#function answering no 1
+def no1(url):
+    uniqueUrl = []
+    parsed = urlparse(url)
+    if parsed.netloc not in uniqueUrl:
+        uniqueUrl.append(parsed)
+    countUnique++
 
 def checkIfTrap(links: list) -> list:
     dateSet = set()
@@ -38,6 +46,7 @@ def extract_next_links(url, resp):
         for path in soup.find_all('a'):
             link = urllib.parse.urljoin(parsed.netloc, path.get('href'))
             outputLinks.append(urldefrag(link)[0])
+        no1(url)
     #checking for links in redirects with response 3xx
     if is_valid(url) and 300 <= resp.status <= 302:
         if resp.raw_response.history.length != 0:
@@ -45,8 +54,7 @@ def extract_next_links(url, resp):
                 fullUrl = urllib.parse.urljoin(parsed.netloc, link.url)
                 outputLinks.append(urldefrag(fullUrl)[0])
                 print("Adding redirect to list of extracted links")
-   if is_valid(url) and resp.status>400:
-        print("this is invlaid")    
+        no1(url) 
 #checks for traps
     trapList = checkIfTrap(outputLinks)
     if len(trapList) >= 3:
