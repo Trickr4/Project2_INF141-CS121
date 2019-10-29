@@ -22,7 +22,36 @@ def no1(url):
     if parsed.netloc not in uniqueUrl:
         uniqueUrl.append(parsed)
     countUnique++
-
+#answering no 3
+def no3(html_doc):
+    allWords= []
+    soup = BeautifulSoup(html_doc, 'html.parser')
+    for word in soup.find_all('div',{'class':'entire-content'}:
+        c = word.text
+		w = c.lower().split()
+		for ww in w:
+            allWords.append(ww)
+	removeSymbol(allWords)
+def removeSymbol(allWords):
+    allWordsWithoutSymbol = []
+    allSymbols='"!~`#$%^&*()_+-=<,>.?/:;"'\'
+    for word in allWords:
+        for symbol in symbols:
+            if word!=symbol:
+                allWordsWithoutSymbol.append(word)
+	addToDict(allWordsWithoutSymbol)
+def addToDict(allWordsWithoutSymbol):
+    for word in allWordsWithoutSymbol:
+        if word in wordDict:
+            wordDict[word]+=1
+        else:
+            wordDict[word]=1
+def find50Most(wordDict):
+    most50Words = []
+    for i in range(0,50):
+        most50Words.append(max(wordDict,key = wordDict.get()))
+	print(most50Words)
+ 
 def checkIfTrap(links: list) -> list:
     dateSet = set()
     trapList = []
