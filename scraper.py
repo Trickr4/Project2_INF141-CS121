@@ -4,24 +4,32 @@ import urllib
 from bs4 import BeautifulSoup
 from collections import defaultdict
 
-
 #this is a set of crawled urls
 already_crawled = set()
-countUnique = 0
-#this function receives a URL and corresponding web response
-#(for example, the first one will be "http://www.ics.uci.edu" and the Web response will contain the page itself).
-def scraper(url, resp):
-    links = extract_next_links(url, resp)
-    #return the list of URLs "scapped" from that page
-    return [link for link in links if is_valid(link)]
+countUnique = 0 
 
-#function answering no 1
+#dict for no 2
+longestPage={}
+#dict for no 3
+wordDict = {}
+
+#answeing no 1
 def no1(url):
     uniqueUrl = []
     parsed = urlparse(url)
     if parsed.netloc not in uniqueUrl:
         uniqueUrl.append(parsed)
     countUnique++
+#answering no 2
+def no2(url,html_doc):
+    words = []
+    soup = BeautifulSoup(html_doc, 'html.parser')
+    for word in soup.find_all('div',{'class':'entire-content'}:
+        c = word.text
+		w = c.lower().split()
+		for ww in w:
+		    words.append(ww)
+	longestPage[url]=len(words)
 #answering no 3
 def no3(html_doc):
     allWords= []
@@ -31,6 +39,7 @@ def no3(html_doc):
 		w = c.lower().split()
 		for ww in w:
             allWords.append(ww)
+			
 	removeSymbol(allWords)
 def removeSymbol(allWords):
     allWordsWithoutSymbol = []
@@ -51,7 +60,16 @@ def find50Most(wordDict):
     for i in range(0,50):
         most50Words.append(max(wordDict,key = wordDict.get()))
 	print(most50Words)
- 
+    
+
+
+#this function receives a URL and corresponding web response
+#(for example, the first one will be "http://www.ics.uci.edu" and the Web response will contain the page itself).
+def scraper(url, resp):
+    links = extract_next_links(url, resp)
+    #return the list of URLs "scapped" from that page
+    return [link for link in links if is_valid(link)]
+
 def checkIfTrap(links: list) -> list:
     dateSet = set()
     trapList = []
@@ -75,7 +93,12 @@ def extract_next_links(url, resp):
         for path in soup.find_all('a'):
             link = urllib.parse.urljoin(parsed.netloc, path.get('href'))
             outputLinks.append(urldefrag(link)[0])
+        #answer no 1
         no1(url)
+		#answer no 2
+		no2(url,html_doc)
+        #answer no3
+        no3(html_doc)
     #checking for links in redirects with response 3xx
     if is_valid(url) and 300 <= resp.status <= 302:
         if resp.raw_response.history.length != 0:
@@ -83,7 +106,12 @@ def extract_next_links(url, resp):
                 fullUrl = urllib.parse.urljoin(parsed.netloc, link.url)
                 outputLinks.append(urldefrag(fullUrl)[0])
                 print("Adding redirect to list of extracted links")
-        no1(url) 
+        #answer no 1
+        no1(url)
+		#answer no 2
+		no2(url,html_doc)
+        #answer no3
+        no3(html_doc)
 #checks for traps
     trapList = checkIfTrap(outputLinks)
     if len(trapList) >= 3:
