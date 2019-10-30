@@ -2,6 +2,7 @@ from urllib.parse import urlparse
 import requests
 from bs4 import BeautifulSoup
 import operator
+from collections import defaultdict
 #dict for no 2
 longestPage={}
 #dict for no 3
@@ -18,6 +19,7 @@ def no1(urls):
             uniqueUrl.append(net)
     countUnique = len(uniqueUrl)
     print("unique url = ",countUnique)
+
 	
 #answering no 2
 def no2(urls):
@@ -35,6 +37,8 @@ def no2(urls):
         longestPage[url]=len(words)
     maxWords =max(longestPage.items(),key = operator.itemgetter(1))[0]
     print("url with the most words=",maxWords)
+
+    
 #answering no 3
 def no3(urls):
     print("no 3")
@@ -59,6 +63,22 @@ def no3(urls):
         del wordDict[most]
     print("50 most appear words ",most50Words)
 
+
+def no4(urls):
+    print("no 4")
+    subdomains = defaultdict(int)
+    for url in urls:
+        parsed = urlparse(url)
+        if 'ics.uci.edu' in parsed.netloc.strip('www.'):
+            subdomains[parsed.netloc]+=1
+
+    print("Number of subdomains in ics.uci.edu domain: "+ \
+          str(len(subdomains)))
+    for key,value in subdomains.items():
+        print(key + str(value))
+    
+
+
 def main():
     print("starting main()")
     file2 =open("url.txt","r")
@@ -69,7 +89,10 @@ def main():
     print(urls)
     no1(urls)
     no2(urls)
-    no3(urls)	
+    no3(urls)
+    no4(urls)
     file2.close()
+
+
 if __name__ == "__main__":
     main()
