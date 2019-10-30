@@ -28,6 +28,7 @@ def extract_next_links(url, resp):
         html_doc = resp.raw_response.content
         soup = BeautifulSoup(html_doc, 'html.parser')
         file.write(url)
+	file.write("\n")
         for path in soup.find_all('a'):
             link = urllib.parse.urljoin(parsed.netloc, path.get('href'))
             outputLinks.append(urldefrag(link)[0])
@@ -36,11 +37,13 @@ def extract_next_links(url, resp):
     #checking for links in redirects with response 3xx
     if is_valid(url) and 300 <= resp.status <= 302:
         file.write(url)
+	file.write("\n")
         if resp.raw_response.history.length != 0:
             for link in resp.raw_response.history:
                 fullUrl = urllib.parse.urljoin(parsed.netloc, link.url)
                 outputLinks.append(urldefrag(fullUrl)[0])
                 file.write(urldefrag(link)[0])
+		file.write("\n")
                 
     file.close()
     return outputLinks
