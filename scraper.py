@@ -2,7 +2,6 @@ import re
 from urllib.parse import urlparse,urldefrag
 import urllib
 from bs4 import BeautifulSoup
-from collections import defaultdict
 
 #this is a set of crawled urls
 already_crawled = set()
@@ -14,16 +13,6 @@ def scraper(url, resp):
     #return the list of URLs "scapped" from that page
     return [link for link in links if is_valid(link)]
 
-def checkIfTrap(links: list) -> list:
-    dateSet = set()
-    trapList = []
-    for link in links:
-        date = re.search(r'\d{4}-\d{2}[-\d{2}]?',link)
-        if date:
-            dateSet.add(date.group())
-            trapList.append(link)
-    return trapList
-
 
 def extract_next_links(url, resp):
     # Implementation requred.
@@ -31,7 +20,7 @@ def extract_next_links(url, resp):
     parsed = urlparse(url)
 
     #writing urls into url.txt
-    file =open("url.txt","w"0
+    file =open("url.txt","w")
 	       
     #replaced resp.status condition with a function that checks it instead so
     #the code won't be as messy.
@@ -51,15 +40,8 @@ def extract_next_links(url, resp):
             for link in resp.raw_response.history:
                 fullUrl = urllib.parse.urljoin(parsed.netloc, link.url)
                 outputLinks.append(urldefrag(fullUrl)[0])
-                print("Adding redirect to list of extracted links")
                 file.write(urldefrag(link)[0])
-
-    
-#checks for traps
-    trapList = checkIfTrap(outputLinks)
-    if len(trapList) >= 3:
-        for link in trapList:
-            outputLinks.remove(link)
+                
     file.close()
     return outputLinks
 
@@ -78,14 +60,22 @@ def checkIfAlreadyCrawled(url):
 def checkDomain(url):
     valids = ["ics.uci.edu","cs.uci.edu","information.ics.edu",
               "stat.uci.edu","informatics.uci.edu"]
+    if url.netloc.strip('www.') == "wics.ics.uci.edu" and \
+       "/events" in url.path:
+        return False
+
+    elif url.netloc.strip('www.') == "archive.uci.edu":
+        return False
+    
     #only domain that has to check path as well, so i made it a separate if statement
-    if url.netloc.strip('www.') == "today.uci.edu" and \
+    elif url.netloc.strip('www.') == "today.uci.edu" and \
        "/department/information_computer_sciences" in url.path:
-        return True 
-    else:
-        for domain in valids:
-            if domain in url.netloc.strip('www.'):
-                return True
+        return True
+    
+    for domain in valids:
+        if domain in url.netloc.strip('www.'):
+            return True
+        
     return False
 
 
@@ -110,7 +100,7 @@ def is_valid(url):
                       "epub","dll","cnf","tgz","sha1","thmx","mso","arff",
                       "rtf","jar","csv","rm","smil","wmv","swf","wma","zip",
                       "rar","gz","svg","txt","py","rkt","ss","scm", "json",
-                      "pdf", "wp-content", "calendar", "ical"]
+                      "pdf", "wp-content", "calendar", "ical", "war"]
 
         for n in dontCrawled:
             if (n) in parsed.query or (n) in parsed.path:
@@ -126,7 +116,7 @@ def is_valid(url):
             + r"|epub|dll|cnf|tgz|sha1"
             + r"|thmx|mso|arff|rtf|jar|csv"
             + r"|rm|smil|wmv|swf|wma|zip|rar|gz|svg"
-            + r"|txt|py|rkt|ss|scm|odc|sas)$", parsed.path.lower())
+            + r"|txt|py|rkt|ss|scm|odc|sas|war)$", parsed.path.lower())
 
     except TypeError:
         print ("TypeError for ", parsed)
