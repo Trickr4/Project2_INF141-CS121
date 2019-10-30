@@ -64,6 +64,7 @@ def no3(urls):
     print("50 most appear words ",most50Words)
 
 
+#answering no 4
 def no4(urls):
     print("no 4")
     subdomains = defaultdict(int)
