@@ -33,6 +33,7 @@ def extract_next_links(url, resp):
             link = urllib.parse.urljoin(parsed.netloc, path.get('href'))
             outputLinks.append(urldefrag(link)[0])
             file.write(urldefrag(link)[0])
+            file.write("\n")
 
     #checking for links in redirects with response 3xx
     if is_valid(url) and 300 <= resp.status <= 302:
