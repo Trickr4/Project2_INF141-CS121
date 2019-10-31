@@ -3,7 +3,6 @@ from urllib.parse import urlparse,urldefrag
 import urllib
 from bs4 import BeautifulSoup
 import operator
-from collections import defaultdict
 
 #this is a set of crawled urls
 already_crawled = set()
@@ -24,6 +23,7 @@ def extract_next_links(url, resp):
     # Implementation requred.
     outputLinks = list()
     parsed = urlparse(url)
+    domain = "https://"+parsed.netloc
 
     #writing urls into .txt files
     with open("url.txt", "a", encoding="utf-8") as file, \
@@ -38,9 +38,7 @@ def extract_next_links(url, resp):
             file2.write(soup.get_text()+"\n")
             for path in soup.find_all('a'):
                 relative = path.get('href')
-                if not relative.startswith("/"):
-                    relative = "/"+relative
-                link = urllib.parse.urljoin(url, relative)
+                link = urllib.parse.urljoin(domain, relative)
                 outputLinks.append(urldefrag(link)[0])
                 file.write(urldefrag(link)[0]+"\n")
                 
@@ -125,7 +123,7 @@ def is_valid(url):
             + r"|epub|dll|cnf|tgz|sha1"
             + r"|thmx|mso|arff|rtf|jar|csv"
             + r"|rm|smil|wmv|swf|wma|zip|rar|gz|svg"
-            + r"|txt|py|rkt|ss|scm|odc|sas|war)$", parsed.path.lower())
+            + r"|txt|py|rkt|ss|scm|odc|sas|war|r|rmd)$", parsed.path.lower())
 
     except TypeError:
         print ("TypeError for ", parsed)
