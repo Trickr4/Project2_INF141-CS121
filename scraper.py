@@ -32,6 +32,7 @@ def extract_next_links(url, resp):
 	       
     #replaced resp.status condition with a function that checks it instead so
     #the code won't be as messy.
+
         if is_valid(url) and 200<=resp.status<=202 and checkIfAlreadyCrawled(url):
             html_doc = resp.raw_response.content
             soup = BeautifulSoup(html_doc, 'html.parser')
