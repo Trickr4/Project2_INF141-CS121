@@ -12,26 +12,28 @@ class Frontier(object):
         self.logger = get_logger("FRONTIER")
         self.config = config
         self.to_be_downloaded = list()
-        
-        if not os.path.exists(self.config.save_file) and not restart:
-            # Save file does not exist, but request to load save.
-            self.logger.info(
-                f"Did not find save file {self.config.save_file}, "
-                f"starting from seed.")
-        elif os.path.exists(self.config.save_file) and restart:
-            # Save file does exists, but request to start from seed.
-            self.logger.info(
-                f"Found save file {self.config.save_file}, deleting it.")
-            os.remove(self.config.save_file)
-        # Load existing save file, or create one if it does not exist.
+        if restart:
+            if os.path.exists(self.config.save_file):
+                os.remove(self.config.save_file)
+            if os.path.exists(self.config.save_file + ".dir"):
+                os.remove(self.config.save_file + ".dir")
+            if os.path.exists(self.config.save_file + ".bak"):
+                os.remove(self.config.save_file + ".bak")
+            if os.path.exists(self.config.save_file + ".db"):
+                os.remove(self.config.save_file + ".db")
+            if os.path.exists(self.config.save_file + ".bat"):
+                os.remove(self.config.save_file + ".bat")
         self.save = shelve.open(self.config.save_file)
         if restart:
+            self.logger.info("re-starting from seed.")
             for url in self.config.seed_urls:
                 self.add_url(url)
         else:
+            self.logger.info("loading frontier from shelved file if exists")
             # Set the frontier state with contents of save file.
             self._parse_save_file()
             if not self.save:
+                self.logger.info("Shelve file was empty or non existing, loading seed urls")
                 for url in self.config.seed_urls:
                     self.add_url(url)
 

@@ -62,13 +62,14 @@ def checkDomain(url):
     
     valids = ["ics.uci.edu","cs.uci.edu", "stat.uci.edu",
               "informatics.uci.edu"]
+
     netloc = url.netloc
 
     if netloc.startswith("www."):
         netloc = netloc.strip("www.")
 
     for domain in valids:
-        if domain in netloc:
+        if netloc == domain:
             return True
         
     #only domain that has to check path as well, so i made it a separate if statement
@@ -123,7 +124,8 @@ def is_valid(url):
             + r"|epub|dll|cnf|tgz|sha1"
             + r"|thmx|mso|arff|rtf|jar|csv"
             + r"|rm|smil|wmv|swf|wma|zip|rar|gz|svg"
-            + r"|txt|py|rkt|ss|scm|odc|sas|war|r|rmd)$", parsed.path.lower())
+            + r"|txt|py|rkt|ss|scm|odc|sas|war|r|rmd"
+            + r"|ds|apk|img)$", parsed.path.lower())
 
     except TypeError:
         print ("TypeError for ", parsed)
