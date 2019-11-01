@@ -10,7 +10,8 @@ already_crawled = set()
 longestPage= 0
 #dict for no 3
 wordDict = {}
-
+content={}
+longestPage={}
 #this function receives a URL and corresponding web response
 #(for example, the first one will be "http://www.ics.uci.edu" and the Web response will contain the page itself).
 def scraper(url, resp):
@@ -24,10 +25,11 @@ def extract_next_links(url, resp):
     outputLinks = list()
     parsed = urlparse(url)
     domain = "https://"+parsed.netloc
-
+    words = []
     #writing urls into .txt files
     with open("url.txt", "a", encoding="utf-8") as file, \
-         open("content.txt", "a", encoding="utf-8") as file2:
+         open("content.txt", "a", encoding="utf-8") as file2, \
+         open("longest.txt","a",encoding="utf-8") ad file3:
 
 	#checks for valid url and response status
         if is_valid(url) and 200<=resp.status<=202 and checkIfAlreadyCrawled(url):
@@ -35,7 +37,14 @@ def extract_next_links(url, resp):
             soup = BeautifulSoup(html_doc, 'html.parser')
             no2(url, soup)
             file.write(url+"\n")
-            file2.write(soup.get_text()+"\n")
+            for t in soup.text.split():
+                if t!="" and t.isalnum() and "[]" not in t:
+               
+                    words.append(t)
+           
+            longestPage[url]=len(words)
+            file2.write(url+"\n"+words+"\n")
+            file3.write(url+longestPage[url]+"\n")
             for path in soup.find_all('a'):
                 relative = path.get('href')
                 link = urllib.parse.urljoin(domain, relative)
@@ -44,6 +53,7 @@ def extract_next_links(url, resp):
                 
     file.close()
     file2.close()
+    file3.close()
     return outputLinks
 
 
@@ -132,6 +142,7 @@ def is_valid(url):
         raise
 
 
+'''
 #answering no 2
 def no2(url, html):
     text = html.get_text().split()
@@ -147,3 +158,4 @@ def no2(url, html):
             file.write(html.get_text())
         file.close()
 	
+'''
