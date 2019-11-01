@@ -68,9 +68,12 @@ def no3(urls):
 def no4(urls):
     print("no 4")
     subdomains = defaultdict(int)
+    parsed = urlparse(url)
+    netloc = parsed.netloc
+    if netloc.startswith("www."):
+        netloc = netloc.strip('www.')
     for url in urls:
-        parsed = urlparse(url)
-        if 'ics.uci.edu' in parsed.netloc.strip('www.'):
+        if netloc == 'ics.uci.edu':
             subdomains[parsed.netloc]+=1
 
     print("Number of subdomains in ics.uci.edu domain: "+ \
