@@ -3,6 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 import operator
 from collections import defaultdict
+import re
 #dict for no 2
 longestPage={}
 #dict for no 3
@@ -11,12 +12,10 @@ wordDict = {}
 #answeing no 1
 def no1(urls):
     print("no1")
-    uniqueUrl = []
+    uniqueUrl = set()
     for url in urls:
-        parsed = urlparse(url)
-        net =parsed.netloc
-        if net not in uniqueUrl:
-            uniqueUrl.append(net)
+        if is_valid(url):
+            uniqueUrl.add(url)
     countUnique = len(uniqueUrl)
     print("unique url = ",countUnique)
 
@@ -80,21 +79,20 @@ def no4(urls):
           str(len(subdomains)))
     for key,value in subdomains.items():
         print(key + str(value))
-    
 
 
 def main():
     print("starting main()")
-    file2 =open("url.txt","r")
+    file2 =open("url.txt","r", encoding="utf8")
     #urls that are crawled
     urls = []
     for n in file2:
         urls.append(n.rstrip())
-    print(urls)
+    #print(urls)
     no1(urls)
-    no2(urls)
-    no3(urls)
-    no4(urls)
+    #no2(urls)
+    #no3(urls)
+    #no4(urls)
     file2.close()
 
 

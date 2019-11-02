@@ -75,29 +75,41 @@ def checkDomain(url):
 
     netloc = url.netloc
 
+    subdomain = netloc
+
     if netloc.startswith("www."):
         netloc = netloc.strip("www.")
 
     netlist = netloc.split(".")
         
     if len(netlist) >= 4:
-        netloc = ".".join(netlist[1:])
+        subdomain = ".".join(netlist[1:])
+    
+    if netloc == "wics.ics.uci.edu" and \
+       "/events" in url.path:
+        return False
+
+    if netloc == "archive.ics.uci.edu":
+        return False
+
+    if netloc == "hack.ics.uci.edu" and \
+       "gallery" in url.path:
+        return False
+
+    if netloc == "grape.ics.uci.edu":
+        return False
+
+    if netloc == "intranet.ics.uci.edu":
+        return False
 
     for domain in valids:
-        if netloc == domain:
+        if subdomain == domain:
             return True
         
     #only domain that has to check path as well, so i made it a separate if statement
     if netloc == "today.uci.edu" and \
        "/department/information_computer_sciences" in url.path:
         return True
-    
-    if netloc == "wics.ics.uci.edu" and \
-       "/events" in url.path:
-        return False
-
-    if netloc == "archive.uci.edu":
-        return False
         
     return False
 
@@ -123,7 +135,7 @@ def is_valid(url):
                       "epub","dll","cnf","tgz","sha1","thmx","mso","arff",
                       "rtf","jar","csv","rm","smil","wmv","swf","wma","zip",
                       "rar","gz","svg","txt","py","rkt","ss","scm", "json",
-                      "pdf", "wp-content", "calendar", "ical", "war"]
+                      "pdf", "wp-content", "calendar", "ical", "war", "img"]
 
         for n in dontCrawled:
             if (n) in parsed.query or (n) in parsed.path:
