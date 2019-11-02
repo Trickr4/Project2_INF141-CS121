@@ -1,9 +1,9 @@
-Names: Priscilla Chan, Marcella Chandra, Jonathan Chhou
+Names: Priscilla Chan, Marcella Benedicta Chandra, Jonathan Chhou
 
-Number of unique urls: 7267
-Url with the most words: https://graphics.ics.uci.edu/publication.html
-Length of url with the most words: 15537
-Top 50 words:
+1. Number of unique urls: 7267
+2. Url with the most words: https://graphics.ics.uci.edu/publication.html
+3. Length of url with the most words: 15537
+4. Top 50 words:
 0
 added
 will
