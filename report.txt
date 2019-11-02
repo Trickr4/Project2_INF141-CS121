@@ -1,0 +1,153 @@
+Names: Priscilla Chan, Marcella Chandra, Jonathan Chhou
+
+Number of unique urls: 7267
+Url with the most words: https://graphics.ics.uci.edu/publication.html
+Length of url with the most words: 15537
+Top 50 words:
+0
+added
+will
+months
+var
+research
+students
+project
+years
+3
+can
+data
+computer
+information
+use
+none
+pm
+2019
+news
+student
+course
+chenli
+events
+projects
+2018
+li
+may
+software
+new
+following
+using
+2
+1
+bren
+school
+uci
+ics
+ramesh
+science
+lecture
+make
+search
+img
+reply
+one
+also
+1px
+contact
+graduate
+trac
+Number of subdomains in ics.uci.edu domain: 96
+statconsulting.ics.uci.edu 46
+hombao.ics.uci.edu 5
+ngs.ics.uci.edu 70200
+futurehealth.ics.uci.edu 634
+calendar.ics.uci.edu 1509
+intranet.ics.uci.edu 821
+helpdesk.ics.uci.edu 18
+studentcouncil.ics.uci.edu 100
+aiclub.ics.uci.edu 122
+mswe.ics.uci.edu 794
+mhcid.ics.uci.edu 597
+mcs.ics.uci.edu 2885
+chenli.ics.uci.edu 87
+cert.ics.uci.edu 262
+isg.ics.uci.edu 2958
+tippersweb.ics.uci.edu 11
+wics.ics.uci.edu 20663
+cyberclub.ics.uci.edu 132
+transformativeplay.ics.uci.edu 526
+luci.ics.uci.edu 13
+iasl.ics.uci.edu 1159
+jgarcia.ics.uci.edu 390
+archive.ics.uci.edu 14
+sprout.ics.uci.edu 25
+cwicsocal18.ics.uci.edu 778
+cloudberry.ics.uci.edu 1298
+graphics.ics.uci.edu 297
+sdcl.ics.uci.edu 6822
+evoke.ics.uci.edu 21492
+student-council.ics.uci.edu 101
+sconce.ics.uci.edu 40
+cml.ics.uci.edu 4896
+asterixdb.ics.uci.edu 3
+sherlock.ics.uci.edu 59
+flamingo.ics.uci.edu 419
+fr.ics.uci.edu 71
+asterix.ics.uci.edu 107
+psearch.ics.uci.edu 15
+jujube.ics.uci.edu 4
+nile.ics.uci.edu 2
+grape.ics.uci.edu 190484
+mse.ics.uci.edu 554
+malek.ics.uci.edu 16
+redmiles.ics.uci.edu 86
+piki.ics.uci.edu 1
+awareness.ics.uci.edu 3
+cradl.ics.uci.edu 1265
+hana.ics.uci.edu 944
+informatics.ics.uci.edu 132
+seal.ics.uci.edu 289
+soc.ics.uci.edu 4
+honors.ics.uci.edu 131
+riscit.ics.uci.edu 34
+vid.ics.uci.edu 1
+checkmate.ics.uci.edu 3
+elms.ics.uci.edu 2
+support.ics.uci.edu 2
+keys.ics.uci.edu 2
+vision.ics.uci.edu 5343
+cgvw.ics.uci.edu 2
+seraja.ics.uci.edu 2
+auge.ics.uci.edu 2
+esl.ics.uci.edu 73
+mapgrid.ics.uci.edu 2
+xtune.ics.uci.edu 45
+www-db.ics.uci.edu 199
+tastier.ics.uci.edu 4
+dblp.ics.uci.edu 2
+ipubmed.ics.uci.edu 12
+vip.ics.uci.edu 1
+kdd.ics.uci.edu 1
+nalini.ics.uci.edu 68
+satware.ics.uci.edu 1
+sourcerer.ics.uci.edu 1
+map125.ics.uci.edu 2
+omni.ics.uci.edu 1
+duttgroup.ics.uci.edu 4563
+dynamo.ics.uci.edu 89
+givargis.ics.uci.edu 1
+DataGuard.ics.uci.edu 1
+DataProtector.ics.uci.edu 1
+asterix-gerrit.ics.uci.edu 2
+emj.ics.uci.edu 1440
+computableplant.ics.uci.edu 826
+emj-pc.ics.uci.edu 1
+swiki.ics.uci.edu 9785
+sli.ics.uci.edu 8902
+mailman.ics.uci.edu 49
+graphmod.ics.uci.edu 3
+metaviz.ics.uci.edu 1
+hack.ics.uci.edu 2751
+wearablegames.ics.uci.edu 172
+codeexchange.ics.uci.edu 5
+hobbes.ics.uci.edu 154
+cherry.ics.uci.edu 1
+chime.ics.uci.edu 1

@@ -75,15 +75,19 @@ def checkDomain(url):
 
     netloc = url.netloc
 
-    subdomain = netloc
-
     if netloc.startswith("www."):
         netloc = netloc.strip("www.")
 
     netlist = netloc.split(".")
+
+    subdomain = ".".join(netlist)
         
     if len(netlist) >= 4:
         subdomain = ".".join(netlist[1:])
+
+    if netloc == "today.uci.edu" and \
+       "/department/information_computer_sciences" in url.path:
+        return True
     
     if netloc == "wics.ics.uci.edu" and \
        "/events" in url.path:
@@ -105,13 +109,6 @@ def checkDomain(url):
     for domain in valids:
         if subdomain == domain:
             return True
-        
-    #only domain that has to check path as well, so i made it a separate if statement
-    if netloc == "today.uci.edu" and \
-       "/department/information_computer_sciences" in url.path:
-        return True
-        
-    return False
 
 
 def is_valid(url):
