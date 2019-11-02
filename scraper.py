@@ -44,7 +44,7 @@ def extract_next_links(url, resp):
            
             longestPage[url]=len(words)
             file2.write(url+"\n"+str(words)+"\n")
-            file3.write(url+str(longestPage[url])+"\n")
+            file3.write(url+"\n"+str(longestPage[url])+"\n")
             for path in soup.find_all('a'):
                 relative = path.get('href')
                 link = urllib.parse.urljoin(domain, relative)
@@ -77,6 +77,11 @@ def checkDomain(url):
 
     if netloc.startswith("www."):
         netloc = netloc.strip("www.")
+
+    netlist = netloc.split(".")
+        
+    if len(netlist) >= 4:
+        netloc = ".".join(netlist[1:])
 
     for domain in valids:
         if netloc == domain:
